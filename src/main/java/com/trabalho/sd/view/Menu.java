@@ -35,9 +35,14 @@ public class Menu {
         usuario.setCpf(s.nextLine());
         System.out.print("Informe a senha: ");
         usuario.setSenha(s.nextLine());
-        usuarios.add(usuario);
-        System.out.println("\nUSUAŔIO " + usuario.getCpf() + " CADASTRADO COM SUCESSO !\n");
-        menuInicial();
+        if(usuarios.stream().anyMatch(u -> u.getCpf().equals(usuario.getCpf()))) {
+            System.out.println("CPF JÁ CADASTRADO\n");
+            menuInicial();
+        } else {
+            usuarios.add(usuario);
+            System.out.println("\nUSUAŔIO " + usuario.getCpf() + " CADASTRADO COM SUCESSO !\n");
+            menuInicial();
+        }
     }
 
     public void logar() {
