@@ -21,6 +21,12 @@ public class UsuarioDAO implements Serializable, JsonBase {
         writeJson(this, NOME_ARQUIVO);
     }
 
+    public void pagarCompra(String cpfVendedor, Double valor) {
+        usuarios.stream().forEach(u -> {
+            if (u.getCpf().equals(cpfVendedor)) u.setSaldo(u.getSaldo() - valor);
+        });
+    }
+
     public void receberVenda(String cpfVendedor, Double valor) {
         usuarios.stream().forEach(u -> {
             if (u.getCpf().equals(cpfVendedor)) u.setSaldo(u.getSaldo() + valor);

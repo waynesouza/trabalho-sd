@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +17,6 @@ public class Usuario implements Serializable {
     private String cpf;
     private String senha;
     private Double saldo = 100.0;
+    private ArrayList<Negociacao> negociacoes;
 
 }
