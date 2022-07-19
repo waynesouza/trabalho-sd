@@ -1,6 +1,6 @@
 package com.trabalho.sd.view;
 
-import com.trabalho.sd.model.Usuario;
+import com.trabalho.sd.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
