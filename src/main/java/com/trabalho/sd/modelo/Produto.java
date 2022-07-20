@@ -1,20 +1,27 @@
 package com.trabalho.sd.modelo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class Produto implements Serializable {
 
     private String id;
-    private String descricao;
+    private String titulo;
     private Integer qtdEstoque;
 
-    public Produto(String id, String descricao) {
+    private List<Double> precos;
+
+    public Produto(String id, String titulo) {
         this.id = id;
-        this.descricao = descricao;
+        this.titulo = titulo;
 //        this.questions = new HashMap<String, Question>();
 //        this.offers = new HashMap<String, Offer>();
         this.qtdEstoque = 0;
