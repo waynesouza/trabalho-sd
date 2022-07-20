@@ -2,11 +2,12 @@ package com.trabalho.sd.modelo.dao;
 
 import com.trabalho.sd.modelo.Usuario;
 import com.trabalho.sd.util.JsonBase;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class UsuarioDAO implements Serializable, JsonBase {
 
     private static final String NOME_ARQUIVO = "usuarios.json";

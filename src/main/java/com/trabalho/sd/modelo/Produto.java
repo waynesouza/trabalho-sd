@@ -19,11 +19,11 @@ public class Produto implements Serializable {
 
     private List<Double> precos;
 
-    public Produto(String id, String titulo) {
-        this.id = id;
+    public Produto(String titulo, Integer qtdEstoque, List<Double> precos) {
         this.titulo = titulo;
 //        this.questions = new HashMap<String, Question>();
 //        this.offers = new HashMap<String, Offer>();
-        this.qtdEstoque = 0;
+        this.qtdEstoque = qtdEstoque;
+        this.precos = precos;
     }
 }

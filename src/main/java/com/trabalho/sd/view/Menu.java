@@ -2,6 +2,9 @@ package com.trabalho.sd.view;
 
 import com.trabalho.sd.modelo.Produto;
 import com.trabalho.sd.modelo.Usuario;
+import com.trabalho.sd.modelo.dao.ProdutoDAO;
+import com.trabalho.sd.modelo.dao.UsuarioDAO;
+import com.trabalho.sd.modelo.persistencia.Persistencia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,12 @@ public class Menu {
     Scanner s = new Scanner(System.in);
     List<Usuario> usuarios = new ArrayList<>();
     List<Produto> produtos = new ArrayList<>();
+
+    private Persistencia persistencia;
+    private ProdutoDAO produtoDAO = new ProdutoDAO();
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+    String cpfLogado;
 
     public void menuInicial() {
         int opc = 0;
@@ -36,17 +45,20 @@ public class Menu {
     }
 
     public void criarConta() {// travar na verificação do cpf(apenas um usuario por cliente)
+        usuarios = usuarioDAO.pegarUsuarios();
+
         Usuario usuario = new Usuario();
         System.out.println("------ CRIAR USUÁRIO ------\n");
         System.out.print("Informe o CPF: ");
         usuario.setCpf(s.nextLine());
         System.out.print("Informe a senha: ");
         usuario.setSenha(s.nextLine());
-        if(usuarios.stream().anyMatch(u -> u.getCpf().equals(usuario.getCpf()))) {
+
+        if(usuarioDAO.isExiste(usuario.getCpf())) {
             System.out.println("CPF JÁ CADASTRADO\n");
             menuInicial();
         } else {
-            usuarios.add(usuario);
+            persistencia.adicionarUsuario(usuario);
             System.out.println("\nUSUAŔIO " + usuario.getCpf() + " CADASTRADO COM SUCESSO !\n");
             menuInicial();
         }
@@ -55,11 +67,12 @@ public class Menu {
     public void logar() {
         System.out.println("------ LOGAR NO SISTEMA ------\n");
         System.out.print("CPF: ");
-        String cpf = s.nextLine();
+        cpfLogado = s.nextLine();
         System.out.print("Senha: ");
         String senha = s.nextLine();
 
-        if(usuarios.stream().anyMatch(u -> u.getCpf().equals(cpf) && u.getSenha().equals(senha))) {
+        Usuario user = usuarioDAO.pegarUsuario(cpfLogado);
+        if(Objects.nonNull(user) && user.getSenha() == senha) {
             System.out.println("\nLOGIN REALIZADO COM SUCESSO !\n");
 
             String opc = "0";
@@ -130,23 +143,23 @@ public class Menu {
         System.out.print("Informe o titulo do produto: ");
         produto.setTitulo(s.nextLine());
 
-        produtos.forEach( item -> {
-            if (item.getTitulo().equals(produto.getTitulo())) {
-                System.out.print("Informe a quantidade do produto: ");
-                item.setQtdEstoque(item.getQtdEstoque() + s.nextInt());
-                produto.setQtdEstoque(item.getQtdEstoque());
-                System.out.print("Informe o preço do produto: ");
-                //
-                List<Double> precos = item.getPrecos();
-                precos.add(s.nextDouble());
-                item.setPrecos(precos);
-                produto.setPrecos(item.getPrecos());
-                //
-                item.setTitulo(produto.getTitulo());
-            }
-        });
+        Produto produtoEditar = produtoDAO.pegarProduto(produto.getTitulo());
 
-        if (produto.getQtdEstoque() == null){
+        if (Objects.nonNull(produtoEditar)){
+            System.out.print("Informe a quantidade do produto: ");
+            produtoEditar.setQtdEstoque(produtoEditar.getQtdEstoque() + s.nextInt());
+            produto.setQtdEstoque(produtoEditar.getQtdEstoque());
+            System.out.print("Informe o preço do produto: ");
+            //
+            List<Double> precos = produtoEditar.getPrecos();
+            precos.add(s.nextDouble());
+            produtoEditar.setPrecos(precos);
+            produto.setPrecos(produtoEditar.getPrecos());
+            //
+            produtoEditar.setTitulo(produto.getTitulo());
+
+            //criar editar na persistencia
+        } else {
             System.out.print("Informe a quantidade do produto: ");
             produto.setQtdEstoque(s.nextInt());
             System.out.print("Informe o preço do produto: ");
@@ -155,9 +168,12 @@ public class Menu {
             produto.setPrecos(precos);
 
             produtos.add(produto);
+            persistencia.adicionarProduto(cpfLogado, produto.getTitulo(), produto.getQtdEstoque(), produto.getPrecos());
         }
         System.out.println("\nPRODUTO " + produto.getTitulo().toUpperCase() + " CADASTRADO COM SUCESSO !");
         menuPrincipal();
     }
+
+
 
 }

@@ -82,15 +82,15 @@ public class Persistencia extends ReceiverAdapter implements RequestHandler, Ser
         System.out.println(msg.getSrc() + ": " + msg.getObject());
     }
 
-    private boolean adicionarUsuario(Usuario usuario) {
+    public boolean adicionarUsuario(Usuario usuario) {
         adicionarUsuario(usuario);
         salvarArquivos();
         return true;
     }
 
-    private boolean adicionarProduto(String cpfVendedor, String produto, Double preco, Integer qtd, String descricao) {
+    public boolean adicionarProduto(String cpfVendedor, String produto, Integer qtd, List<Double> preco) {
 
-        Produto novoProdoto = new Produto(produto, descricao);
+        Produto novoProdoto = new Produto(produto, qtd, preco);
         if (!produtoDAO.isExiste(produto)) produtoDAO.adicionarProduto(novoProdoto);
 
         salvarArquivos();
